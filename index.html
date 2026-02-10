@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mini-Test: Philosophical Affiliation</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f6f7fb;
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+  }
+  h1, h2 {
+    text-align: center;
+  }
+  .question {
+    margin: 20px 0;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 8px;
+  }
+  .options label {
+    display: block;
+    margin: 8px 0;
+    cursor: pointer;
+  }
+  button {
+    display: block;
+    margin: 30px auto;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  #result {
+    margin-top: 40px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Mini-Test: Determining Your Philosophical Affiliation</h1>
+<p style="text-align:center;">
+You may select one or several options that align with your worldview.
+</p>
+
+<form id="quiz">
+
+<div class="question">
+<h3>1. What is your view on the nature of reality?</h3>
+<div class="options">
+<label><input type="checkbox" name="q1" value="Dialectical Materialism"> Reality is objective and exists independently of my perception.</label>
+<label><input type="checkbox" name="q1" value="Existentialism"> Reality is subjective and depends on my perception.</label>
+<label><input type="checkbox" name="q1" value="Neo-Thomism"> Reality is a combination of material and spiritual worlds.</label>
+<label><input type="checkbox" name="q1" value="Pragmatism"> Reality matters only in practical experience.</label>
+</div>
+</div>
+
+<div class="question">
+<h3>2. What is the foundation for determining truth?</h3>
+<div class="options">
+<label><input type="checkbox" name="q2" value="Positivism"> Logic and laws of nature.</label>
+<label><input type="checkbox" name="q2" value="Existentialism"> Personal experience and intuition.</label>
+<label><input type="checkbox" name="q2" value="Neo-Thomism"> Religious faith and spiritual dogmas.</label>
+<label><input type="checkbox" name="q2" value="Pragmatism"> Truth is determined by its practical usefulness.</label>
+</div>
+</div>
+
+<div class="question">
+<h3>3. How do you perceive free will?</h3>
+<div class="options">
+<label><input type="checkbox" name="q3" value="Existentialism"> Humans are entirely free and responsible for their actions.</label>
+<label><input type="checkbox" name="q3" value="Dialectical Materialism"> Free will is limited by material and social factors.</label>
+<label><input type="checkbox" name="q3" value="Neo-Thomism"> Free will is constrained by divine providence.</label>
+<label><input type="checkbox" name="q3" value="Pragmatism"> Free will only makes sense in practical activity.</label>
+</div>
+</div>
+
+<div class="question">
+<h3>4. What do you consider the purpose of human life?</h3>
+<div class="options">
+<label><input type="checkbox" name="q4" value="Neo-Thomism"> Achieving harmony with a higher spiritual entity.</label>
+<label><input type="checkbox" name="q4" value="Existentialism"> Creating oneself as a person through choices and actions.</label>
+<label><input type="checkbox" name="q4" value="Pragmatism"> Achieving success through useful activity.</label>
+<label><input type="checkbox" name="q4" value="Dialectical Materialism"> Changing society by transforming material conditions.</label>
+</div>
+</div>
+
+<div class="question">
+<h3>5. What is the role of education?</h3>
+<div class="options">
+<label><input type="checkbox" name="q5" value="Positivism"> Developing logical thinking and precise knowledge.</label>
+<label><input type="checkbox" name="q5" value="Existentialism"> Individualization and creating a unique self.</label>
+<label><input type="checkbox" name="q5" value="Neo-Thomism"> Shaping a religious worldview and nurturing the soul.</label>
+<label><input type="checkbox" name="q5" value="Pragmatism"> Preparing for successful practical activity.</label>
+<label><input type="checkbox" name="q5" value="Dialectical Materialism"> Shaping personality through collective activity.</label>
+</div>
+</div>
+
+<button type="button" onclick="calculateResult()">See My Result</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+const descriptions = {
+  "Existentialism": `
+    <p><strong>Central Idea:</strong> The external world exists only through the being of "I."</p>
+    <p><strong>Characteristics:</strong> The core concept is individual existence immersed in personal experience.</p>
+    <p><strong>Educational Context:</strong> Education focuses on self-creation and individualization.</p>
+    <p><strong>Representatives:</strong> Heidegger, Sartre, Tillich, Berdyaev.</p>
+  `,
+  "Neo-Thomism": `
+    <p><strong>Central Idea:</strong> Reason is a tool for proving religious dogmas.</p>
+    <p><strong>Characteristics:</strong> Priority of the spiritual over the material.</p>
+    <p><strong>Educational Context:</strong> Spiritual and moral upbringing dominates education.</p>
+    <p><strong>Representatives:</strong> Aquinas, Maritain, Adler.</p>
+  `,
+  "Positivism": `
+    <p><strong>Central Idea:</strong> Only scientifically verified knowledge is true.</p>
+    <p><strong>Characteristics:</strong> Focus on exact and natural sciences.</p>
+    <p><strong>Educational Context:</strong> Development of logical and scientific thinking.</p>
+    <p><strong>Representatives:</strong> Conant.</p>
+  `,
+  "Pragmatism": `
+    <p><strong>Central Idea:</strong> Truth is defined by practical usefulness.</p>
+    <p><strong>Characteristics:</strong> Knowledge arises from experience.</p>
+    <p><strong>Educational Context:</strong> Learning through practice and activity.</p>
+    <p><strong>Representatives:</strong> Dewey.</p>
+  `,
+  "Dialectical Materialism": `
+    <p><strong>Central Idea:</strong> Matter is primary, consciousness secondary.</p>
+    <p><strong>Characteristics:</strong> Personality shaped by social conditions.</p>
+    <p><strong>Educational Context:</strong> Education prepares for social transformation.</p>
+    <p><strong>Representatives:</strong> Marx, Engels.</p>
+  `
+};
+
+function calculateResult() {
+  const data = new FormData(document.getElementById("quiz"));
+
+  const philosophies = Object.keys(descriptions);
+  const scores = {};
+  philosophies.forEach(p => scores[p] = 0);
+
+  let totalSelections = 0;
+
+  for (let value of data.values()) {
+    scores[value]++;
+    totalSelections++;
+  }
+
+  if (totalSelections === 0) {
+    alert("Please select at least one option.");
+    return;
+  }
+
+  const results = philosophies
+    .map(p => ({
+      name: p,
+      score: scores[p],
+      percent: Math.round((scores[p] / totalSelections) * 100)
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  let output = `<h2>Your Philosophical Profile</h2>`;
+
+  results.forEach((r, i) => {
+    if (r.score > 0) {
+      output += `
+        <hr>
+        <h3>${i + 1}. ${r.name} — ${r.percent}%</h3>
+        ${descriptions[r.name]}
+      `;
+    }
+  });
+
+  document.getElementById("result").innerHTML = output;
+}
+</script>
+
+</body>
+</html>
