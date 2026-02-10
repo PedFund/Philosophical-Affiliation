@@ -146,25 +146,57 @@ const descriptions = {
   `
 };
 
+<script>
+const descriptions = { /* ← ОСТАВЛЯЕШЬ КАК ЕСТЬ */ };
+
 function calculateResult() {
   const form = document.getElementById("quiz");
   const data = new FormData(form);
+
+  const philosophies = [
+    "Existentialism",
+    "Neo-Thomism",
+    "Positivism",
+    "Pragmatism",
+    "Dialectical Materialism"
+  ];
+
   const scores = {};
+  philosophies.forEach(p => scores[p] = 0);
+
+  let totalAnswers = 0;
 
   for (let value of data.values()) {
-    scores[value] = (scores[value] || 0) + 1;
+    scores[value]++;
+    totalAnswers++;
   }
 
-  if (Object.keys(scores).length === 0) {
+  if (totalAnswers < 5) {
     alert("Please answer all questions.");
     return;
   }
 
-  let maxKey = Object.keys(scores).reduce((a, b) =>
-    scores[a] > scores[b] ? a : b
-  );
+  // Преобразуем в массив и сортируем по убыванию
+  const sortedResults = philosophies
+    .map(p => ({
+      name: p,
+      score: scores[p],
+      percent: Math.round((scores[p] / totalAnswers) * 100)
+    }))
+    .sort((a, b) => b.score - a.score);
 
-  document.getElementById("result").innerHTML = descriptions[maxKey];
+  // Формируем вывод
+  let output = `<h2>Your Philosophical Profile</h2>`;
+
+  sortedResults.forEach((item, index) => {
+    output += `
+      <hr>
+      <h3>${index + 1}. ${item.name} — ${item.percent}% (${item.score}/${totalAnswers})</h3>
+      ${descriptions[item.name]}
+    `;
+  });
+
+  document.getElementById("result").innerHTML = output;
 }
 </script>
 
